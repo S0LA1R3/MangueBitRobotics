@@ -52,7 +52,7 @@ void loop (){
   analogWrite(pinoBlue, 0); //PINO RECEBE O VALOR
   analogWrite(pinoGreen, 0); //PINO RECEBE O VALOR
   }
-  else if(b < g && b < r){
+  else if(b > g && b > r){
   analogWrite(pinoRed, 0); //PINO RECEBE O VALOR
   analogWrite(pinoBlue, 255); //PINO RECEBE O VALOR
   analogWrite(pinoGreen, 0); //PINO RECEBE O VALOR
@@ -72,13 +72,14 @@ char getTile(uint16_t r, uint16_t g, uint16_t b){
 
   if(soma < 240)
   {
-    t = "p";  
-  } else if (b < g && b < r){
-    t = "a";
+    t = 112;  
+  } else if (b > g && b > r){
+    t = 97;
   } else{
-    t = "b";
+    t = 98;
   } 
 
   return t;
 
 };
+
