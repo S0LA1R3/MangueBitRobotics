@@ -31,10 +31,10 @@ while True:
         cv2.putText(frame, 'r', (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 0, 0), 2)
     
     if 'g' in text.lower():
-        cv2.putText(frame, 'g', (0, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+        cv2.putText(frame, 'g', (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
     if 'b' in text.lower():
-        cv2.putText(frame, 'b', (0, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
+        cv2.putText(frame, 'b', (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
 
     lower_red = np.array([0, 100, 100])
     upper_red = np.array([10, 255, 255])
