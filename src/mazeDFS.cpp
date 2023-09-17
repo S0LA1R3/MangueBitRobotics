@@ -4,8 +4,6 @@
 
 using namespace std;
 
-int N = 6;
-
 vector<vector<int>> graph = {
     {0, 0, 0, 1, 1, 1},
     {1, 1, 0, 1, 1, 0},
@@ -20,7 +18,7 @@ struct Point {
 };
 
 bool isValid(int x, int y, vector<vector<int>> graph) {
-    return x >= 0 && x < N && y >= 0 && y < N && graph[x][y] == 0;
+    return x >= 0 && x < graph.size() && y >= 0 && y < graph[x].size() && graph[x][y] == 0;
 }
 
 bool findPathDFS(Point src, Point dest, vector<Point>& path, vector<vector<bool>>& visited, vector<vector<int>> graph) {
@@ -60,7 +58,7 @@ int main() {
     Point dest = {4, 4};    // Destiny
 
     vector<Point> path;
-    vector<vector<bool>> visited(N, vector<bool>(N, false));
+    vector<vector<bool>> visited(graph.size(), vector<bool>(graph[0].size(), false));
 
     if (isValid(dest.x, dest.y, graph) && findPathDFS(src, dest, path, visited, graph)) {
         cout << "Caminho encontrado:" << endl;
