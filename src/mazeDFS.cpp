@@ -97,12 +97,15 @@ vector<vector<int>> graph = {
   }
 };
 
+const int N = static_cast<int>(graph.size());
+const int M = graph[0].size();
+
 struct Point {
     int x, y;
 };
 
 bool isValid(int x, int y, vector<vector<int>> graph) {
-    return x >= 0 && x < graph.size() && y >= 0 && y < graph[x].size() && graph[x][y] == 0;
+    return x >= 0 && x < N && y >= 0 && y < M && graph[x][y] == 0;
 }
 
 bool findPathDFS(Point src, Point dest, vector<Point>& path, vector<vector<bool>>& visited, vector<vector<int>> graph) {
@@ -137,13 +140,13 @@ bool findPathDFS(Point src, Point dest, vector<Point>& path, vector<vector<bool>
 
 int main() {
     Point src = {2, 2};     // Origin
-    Point dest = {graph.size() - 8, graph[0].size() - 5};    // Destiny
+    Point dest = {N - 8, M - 5};    // Destiny
 
     vector<Point> path;
-    vector<vector<bool>> visited(graph.size(), vector<bool>(graph[0].size(), false));
+    vector<vector<bool>> visited(N, vector<bool>(M, false));
 
-    cout << "Altura do grafo: " << graph.size() << endl <<
-        "Largura do grafo: " << graph[0].size() << endl;
+    cout << "Altura do grafo: " << N << endl <<
+        "Largura do grafo: " << M << endl;
 
     if (isValid(dest.x, dest.y, graph) && findPathDFS(src, dest, path, visited, graph)) {
         cout << "Caminho encontrado:" << endl;
