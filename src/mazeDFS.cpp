@@ -145,17 +145,17 @@ int main() {
     vector<Point> path;
     vector<vector<bool>> visited(N, vector<bool>(M, false));
 
-    cout << "Altura do grafo: " << N << endl <<
-        "Largura do grafo: " << M << endl;
+    cout << "Graph height: " << N << endl <<
+        "Graph width: " << M << endl;
 
     if (isValid(dest.x, dest.y, graph) && findPathDFS(src, dest, path, visited, graph)) {
-        cout << "Caminho encontrado:" << endl;
+        cout << "Path finded:" << endl;
         for (const Point& point : path) {
             cout << "(" << point.x << "," << point.y << ") ";
         }
         cout << endl;
     } else {
-        cout << "Não foi possível encontrar um caminho." << endl;
+        cout << "Couldn't find the way." << endl;
     }
 
     return 0;
