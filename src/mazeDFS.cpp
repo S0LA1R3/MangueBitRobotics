@@ -7,19 +7,42 @@
 using namespace std;
 
 vector<vector<int>> source = {
-  {1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1},
-  {1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1},
-  {1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1},
-  {0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1},
-  {0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0},
-  {0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1},
-  {0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-  {0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 1},
-  {0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0},
-  {0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0},
-  {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1},
-  {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+  {
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0
+  },
+  {
+    1,    1,    1,    0,    1,    1,    1,    0,    1,    1,    1,    0
+  },
+  {
+    1,    0,    1,    0,    1,    0,    1,    0,    1,    0,    1,    0
+  },
+  {
+    1,    0,    1,    1,    1,    0,    1,    1,    1,    0,    1,    0
+  },
+  {
+    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    1,    0
+  },
+  {
+    0,    0,    0,    0,    0,    1,    1,    1,    1,    1,    1,    0
+  },
+  {
+    0,    1,    1,    0,    0,    1,    0,    0,    0,    0,    0,    0
+  },
+  {
+    0,    1,    0,    0,    0,    1,    0,    0,    0,    0,    0,    0
+  },
+  {
+    0,    1,    1,    0,    0,    1,    0,    0,    1,    1,    1,    0
+  },
+  {
+    0,    0,    0,    1,    0,    0,    0,    0,    0,    0,    1,    0
+  },
+  {
+    0,    1,    0,    0,    0,    0,    0,    0,    1,    1,    1,    0
+  },
+  {
+    0,    0,    0,    1,    0,    0,    0,    0,    0,    0,    0,    1
+  }
 };
 
 const int N = static_cast<int>(source.size());
@@ -103,7 +126,7 @@ bool findPathDFS(Point src, Point dest, vector<Point>& path, vector<vector<bool>
         int newY = src.y + dy[i];
 
         if(isValid(newX, newY, graph)){
-            if (findPathDFS({newX, newY}, dest, path, visited, graph)) {
+            if(findPathDFS({newX, newY}, dest, path, visited, graph)){
                 return true;
             }
         }
@@ -116,8 +139,8 @@ bool findPathDFS(Point src, Point dest, vector<Point>& path, vector<vector<bool>
 int main() {
     //auto start_time = chrono::high_resolution_clock::now();
 
-    Point src = {5, 0};     // Origin
-    Point dest = {1, 11};    // Destiny
+    Point src = {11, 0};     // Origin
+    Point dest = {2, 3};    // Destiny
 
     vector<Point> path;
     vector<vector<bool>> visited(N, vector<bool>(M, false));
