@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <stack>
+//#include <chrono>
 #include "graphElement.hpp"
 
 using namespace std;
@@ -27,18 +28,56 @@ struct Point {
     int x, y;
 };
 
-bool isValid(int x, int y, vector<vector<GraphElement>> graph) {
+vector<GraphElement*> findAdjacent(GraphElement* element, vector<vector<GraphElement>>& graph){
+    vector<GraphElement*> adjacent;
+
+    for(int y = 0; y < N; y++){
+        for(int x = 0; x < M; x++){
+            if(element == &graph[y][x]){
+                if(x > 0)
+                    adjacent.push_back(&graph[y][x - 1]);
+
+                if(x < M - 1)
+                    adjacent.push_back(&graph[y][x + 1]);
+
+                if(y > 0)
+                    adjacent.push_back(&graph[y - 1][x]);
+
+                if(y < N - 1)
+                    adjacent.push_back(&graph[y + 1][x]);
+
+                return adjacent;
+            }
+        }
+    }
+
+    return adjacent;
+}
+
+bool isValid(int x, int y, vector<vector<GraphElement>> graph){
     return x >= 0 && x < N && y >= 0 && y < M && graph[x][y].getValue() == 0;
 }
 
-bool findPathDFS(Point src, Point dest, vector<Point>& path, vector<vector<bool>>& visited, vector<vector<GraphElement>> graph) {
-    if (!isValid(src.x, src.y, graph) || visited[src.x][src.y]) {
+bool findPathDFS(Point src, Point dest, vector<Point>& path, vector<vector<bool>>& visited, vector<vector<GraphElement>> graph){
+    if (!isValid(src.x, src.y, graph) || visited[src.x][src.y]){
         return false;
     }
 
-    for (const Point& point : path) {
-            graph[point.x][point.y].setValue(5);
-        }
+	vector<GraphElement*> adjacent = findAdjacent(&graph[src.x][src.y], graph);
+		for(int c = 0; c < static_cast<int>(path.size()) - 2; c++){
+			for(GraphElement* adj: adjacent){
+				if(adj == &graph[path[c].x][path[c].y]){
+					return false;
+				}
+			}
+		}
+
+    visited[src.x][src.y] = true;
+    path.push_back(src);
+
+    for(const Point& point : path){
+        graph[point.x][point.y].setValue(5);
+    }
 
         for(vector<GraphElement> y : graph){
             for(GraphElement x : y){
@@ -51,9 +90,6 @@ bool findPathDFS(Point src, Point dest, vector<Point>& path, vector<vector<bool>
             cout << endl;
         }
     cout << endl;
-
-    visited[src.x][src.y] = true;
-    path.push_back(src);
 
     if (src.x == dest.x && src.y == dest.y) {
         return true;
@@ -78,6 +114,8 @@ bool findPathDFS(Point src, Point dest, vector<Point>& path, vector<vector<bool>
 }
 
 int main() {
+    //auto start_time = chrono::high_resolution_clock::now();
+
     Point src = {5, 0};     // Origin
     Point dest = {1, 11};    // Destiny
 
@@ -112,11 +150,13 @@ int main() {
             }
             cout << endl;
         }
-
         cout << endl;
     } else {
         cout << "Couldn't find the way." << endl;
     }
 
+    /*auto end_time = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::milliseconds>(end_time - start_time);
+    cout << "Tempo de execução: " << duration.count() << " ms" << endl;*/
     return 0;
 }
