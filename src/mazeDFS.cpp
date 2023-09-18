@@ -1,10 +1,11 @@
 #include <iostream>
 #include <vector>
 #include <stack>
+#include "graphElement.hpp"
 
 using namespace std;
 
-vector<vector<int>> graph = {
+vector<vector<int>> source = {
   {1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1},
   {1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1},
   {1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1},
@@ -20,32 +21,31 @@ vector<vector<int>> graph = {
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 };
 
-const int N = static_cast<int>(graph.size());
-const int M = graph[0].size();
-
+const int N = static_cast<int>(source.size());
+const int M = source[0].size();
 struct Point {
     int x, y;
 };
 
-bool isValid(int x, int y, vector<vector<int>> graph) {
-    return x >= 0 && x < N && y >= 0 && y < M && graph[x][y] == 0;
+bool isValid(int x, int y, vector<vector<GraphElement>> graph) {
+    return x >= 0 && x < N && y >= 0 && y < M && graph[x][y].getValue() == 0;
 }
 
-bool findPathDFS(Point src, Point dest, vector<Point>& path, vector<vector<bool>>& visited, vector<vector<int>> graph) {
+bool findPathDFS(Point src, Point dest, vector<Point>& path, vector<vector<bool>>& visited, vector<vector<GraphElement>> graph) {
     if (!isValid(src.x, src.y, graph) || visited[src.x][src.y]) {
         return false;
     }
 
     for (const Point& point : path) {
-            graph[point.x][point.y] = 5;
+            graph[point.x][point.y].setValue(5);
         }
 
-        for(vector<int> y : graph){
-            for(int x : y){
-                if(x == 5){
+        for(vector<GraphElement> y : graph){
+            for(GraphElement x : y){
+                if(x.getValue() == 5){
                     cout << "- ";
                 }else{
-                    cout << x << " ";
+                    cout << x.getValue() << " ";
                 }
             }
             cout << endl;
@@ -84,6 +84,14 @@ int main() {
     vector<Point> path;
     vector<vector<bool>> visited(N, vector<bool>(M, false));
 
+    vector<vector<GraphElement>> graph(N, vector<GraphElement>(M));
+
+	for(int y = 0; y < N; y++){
+		for(int x = 0; x < M; x++){
+		graph[y][x].setValue(source[y][x]);
+		}
+	}
+
     cout << "Graph height: " << N << endl <<
         "Graph width: " << M << endl;
 
@@ -91,15 +99,15 @@ int main() {
         cout << "Path finded:" << endl;
 
         for (const Point& point : path) {
-            graph[point.x][point.y] = 5;
+            graph[point.x][point.y].setValue(5);
         }
 
-        for(vector<int> y : graph){
-            for(int x : y){
-                if(x == 5){
+        for(vector<GraphElement> y : graph){
+            for(GraphElement x : y){
+                if(x.getValue() == 5){
                     cout << "- ";
                 }else{
-                    cout << x << " ";
+                    cout << x.getValue() << " ";
                 }
             }
             cout << endl;
