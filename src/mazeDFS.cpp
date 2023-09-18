@@ -98,16 +98,12 @@ bool findPathDFS(Point src, Point dest, vector<Point>& path, vector<vector<bool>
     visited[src.x][src.y] = true;
     path.push_back(src);
 
-    for(const Point& point : path){
-        graph[point.x][point.y].setValue(5);
-    }
-
-        for(vector<GraphElement> y : graph){
-            for(GraphElement x : y){
-                if(x.getValue() == 5){
+        for(int y = 0; y < N; y++){
+            for(int x = 0; x < M; x++){
+                if(visited[x][y] == true){
                     cout << "- ";
                 }else{
-                    cout << x.getValue() << " ";
+                    cout << graph[x][y].getValue() << " ";
                 }
             }
             cout << endl;
