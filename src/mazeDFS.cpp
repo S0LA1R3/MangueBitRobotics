@@ -81,6 +81,7 @@ bool isValid(int x, int y, vector<vector<GraphElement>> graph){
     return x >= 0 && x < N && y >= 0 && y < M && graph[x][y].getValue() == 0;
 }
 
+vector<Point> truePath;
 bool findPathDFS(Point src, Point dest, vector<Point>& path, vector<vector<bool>>& visited, vector<vector<GraphElement>> graph){
     if (!isValid(src.x, src.y, graph) || visited[src.x][src.y]){
         return false;
@@ -100,10 +101,10 @@ bool findPathDFS(Point src, Point dest, vector<Point>& path, vector<vector<bool>
 
         for(int y = 0; y < N; y++){
             for(int x = 0; x < M; x++){
-                if(visited[x][y] == true){
+                if(visited[y][x] == true){
                     cout << "- ";
                 }else{
-                    cout << graph[x][y].getValue() << " ";
+                    cout << graph[y][x].getValue() << " ";
                 }
             }
             cout << endl;
@@ -123,11 +124,18 @@ bool findPathDFS(Point src, Point dest, vector<Point>& path, vector<vector<bool>
 
         if(isValid(newX, newY, graph)){
             if(findPathDFS({newX, newY}, dest, path, visited, graph)){
-                return true;
+				if(truePath.size() > path.size() || truePath.size() == 0){
+					truePath.clear();
+					for(Point coord : path){
+						truePath.push_back(coord);
+					}
+				}
+				return false;
             }
         }
     }
 
+	visited[src.x][src.y] = false;
     path.pop_back();
     return false;
 }
@@ -152,10 +160,11 @@ int main() {
     cout << "Graph height: " << N << endl <<
         "Graph width: " << M << endl;
 
-    if (isValid(dest.x, dest.y, graph) && findPathDFS(src, dest, path, visited, graph)) {
+	findPathDFS(src, dest, path, visited, graph);
+    if (isValid(dest.x, dest.y, graph) && truePath.size() > 0) {
         cout << "Path finded:" << endl;
 
-        for (const Point& point : path) {
+        for (const Point& point : truePath) {
             graph[point.x][point.y].setValue(5);
         }
 
