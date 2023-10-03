@@ -22,19 +22,18 @@ while True:
     ret, frame = cap.read()
 
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    val, otsu = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
-    erode = cv2.erode(otsu, np.ones((5, 5), np.uint8))
+    val, otsu = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
 
-    text = pytesseract.image_to_string(erode, config='--psm 6')
+    text = pytesseract.image_to_string(otsu, config='--psm 6')
 
-    if 'r' in text.lower():
-        cv2.putText(frame, 'r', (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 0, 0), 2)
+    if 'h' in text.lower():
+        cv2.putText(frame, 'h', (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 0, 0), 2)
     
-    if 'g' in text.lower():
-        cv2.putText(frame, 'g', (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+    if 's' in text.lower():
+        cv2.putText(frame, 's', (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
-    if 'b' in text.lower():
-        cv2.putText(frame, 'b', (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
+    if 'u' in text.lower():
+        cv2.putText(frame, 'u', (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
 
     lower_red = np.array([0, 100, 100])
     upper_red = np.array([10, 255, 255])
@@ -44,16 +43,13 @@ while True:
     upper_green = np.array([85, 255, 255])
     detect_color(frame, lower_green, upper_green, "Verde")
 
-    lower_blue = np.array([90, 100, 100])
-    upper_blue = np.array([140, 255, 255])
-    detect_color(frame, lower_blue, upper_blue, "Azul")
+    lower_yellow = np.array([20, 100, 100])
+    upper_yellow = np.array([40, 255, 255])
+    detect_color(frame, lower_yellow, upper_yellow, "Amarelo")q
 
     cv2.imshow('Camera', frame)
-
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 cap.release()
 cv2.destroyAllWindows()
-
-# By S0LA1R3
