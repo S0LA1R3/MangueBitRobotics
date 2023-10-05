@@ -18,6 +18,8 @@
 #define O1R2 11
 #define O2R2 12
 
+int speed = 100;
+
 void setup() {
   Serial.begin(9600);
 
@@ -41,7 +43,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-
+  goFoward(speed);
 }
 
 void goForward(int speed) {
