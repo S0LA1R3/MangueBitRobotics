@@ -153,7 +153,6 @@ void loop() {
 }
 
 void frente() {
-
     digitalWrite(IN1, LOW); // EF
     digitalWrite(IN2, HIGH);
 
