@@ -112,6 +112,7 @@ void loop(){
   // encoder medindo os giros até chegar no proximo tile, quando chega bota a variavel tile em true
   if(tile){
     updateTile();
+    printMap();
     if(distFrente < threshDist){
   
       if(distEsquerda < threshDist){
