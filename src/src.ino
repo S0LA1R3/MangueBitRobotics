@@ -128,6 +128,7 @@ void loop() {
                 if (sonic.D < threshDist) {
                     direita();
                     direita();
+                    Serial.print("fazendo a volta");
 
                 } else {
                     direita();
