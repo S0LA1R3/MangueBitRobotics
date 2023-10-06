@@ -146,6 +146,9 @@ void loop() {
             Serial.print("frente: ");
             Serial.println(sonic.F);
         }
+        if(direction == 4){
+          direction = N;
+        }
     }
 }
 
