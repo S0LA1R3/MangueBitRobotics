@@ -1,4 +1,4 @@
-#include "ultrassom.h"
+/*#include "ultrassom.h"
 #include "graphElement.hpp"
 
 // motor_A
@@ -114,6 +114,9 @@ void loop() {
 
     // Verifica se o robô já chegou no próximo tile
     if (tile) {
+      if(vitima){
+        mapa[actual.y][actual.x + 1].setType(VICTIM
+      }
         // Atualiza tiles adjacentes
         updateTile();
 
@@ -324,4 +327,4 @@ void printMap() {
         }
         Serial.println();
     }
-}
+}*/
