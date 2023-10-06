@@ -311,3 +311,13 @@ void updateTile(){
     }
   }
 }
+
+void printMap(){
+  for(GraphElement linha[] : mapa){
+    for(GraphElement elemento : linha){
+      Serial.print(element.getValue());
+      Serial.print(" ");
+    }
+    Serial.println();
+  }
+}
