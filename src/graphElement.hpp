@@ -27,6 +27,10 @@ public:
         value = val;
     }
 
+    void setType(ElementType ty){
+        type = ty;
+      }
+
     ElementType getType() const {
         return type;
     }

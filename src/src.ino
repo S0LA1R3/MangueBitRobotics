@@ -1,6 +1,33 @@
 //#include "ultrassom.h"
 #include "graphElement.hpp"
 
+int readDistFrente() {
+    int distancia = 0;
+
+    // Variável recebe o valor da função da biblioteca
+    //distancia = distanceSensorF.measureDistanceCm();
+
+    return distancia;
+}
+
+int readDistDireita() {
+    int distancia = 0;
+
+    // Variável recebe o valor da função da biblioteca
+    //distancia = distanceSensorD.measureDistanceCm();
+
+    return distancia;
+}
+
+int readDistEsquerda() {
+    int distancia = 0;
+
+    // Variável recebe o valor da função da biblioteca
+    //distancia = distanceSensorE.measureDistanceCm();
+
+    return distancia;
+}
+
 // motor_A
 int IN1 = 22 ;
 int IN2 = 23 ;
@@ -58,7 +85,7 @@ struct Sonic {
 };
 
 // Inicializa sonic
-Sonic sonic(readDistFrente, readDistEsquerda, readDistDireita);
+Sonic sonic = {readDistFrente(), readDistEsquerda(), readDistDireita()};
 
 // Usado para indicar que o encoder detectou a chegada em um novo tile
 bool tile = false;
@@ -114,8 +141,8 @@ void loop() {
 
     // Verifica se o robô já chegou no próximo tile
     if (tile) {
-      if(vitima){
-        mapa[actual.y][actual.x + 1].setType(VICTIM
+      if(true){
+        mapa[actualTile.y][actualTile.x + 1].setType(GraphElement::VICTIM);
       }
         // Atualiza tiles adjacentes
         updateTile();
@@ -149,7 +176,7 @@ void loop() {
             Serial.print("frente: ");
             Serial.println(sonic.F);
         }
-        if(direction == 4){
+        if(static_cast<int>(direction) == 4){
           direction = N;
         }
     }
@@ -176,7 +203,7 @@ void frente() {
 
 void direita() {
     // Muda direção absoluta
-    direction++;
+    direction = static_cast<Direction>(static_cast<int>(direction) + 1);
 
     digitalWrite(IN1, LOW); // EF
     digitalWrite(IN2, HIGH);
@@ -198,7 +225,7 @@ void direita() {
 
 void esquerda() {
     // Muda direção absoluta
-    direction--;
+    direction = static_cast<Direction>(static_cast<int>(direction) - 1);
 
     digitalWrite(IN1, LOW); // EF
     digitalWrite(IN2, LOW);
@@ -227,33 +254,6 @@ void parar() {
     digitalWrite(IN6, LOW);
     digitalWrite(IN7, LOW);
     digitalWrite(IN8, LOW);
-}
-
-int readDistFrente() {
-    int distancia = 0;
-
-    // Variável recebe o valor da função da biblioteca
-    distancia = distanceSensorF.measureDistanceCm();
-
-    return distancia;
-}
-
-int readDistDireita() {
-    int distancia = 0;
-
-    // Variável recebe o valor da função da biblioteca
-    distancia = distanceSensorD.measureDistanceCm();
-
-    return distancia;
-}
-
-int readDistEsquerda() {
-    int distancia = 0;
-
-    // Variável recebe o valor da função da biblioteca
-    distancia = distanceSensorE.measureDistanceCm();
-
-    return distancia;
 }
 
 void updateTile() {
