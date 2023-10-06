@@ -14,6 +14,7 @@ int velocidadeB = 3;
 int IN5 = 26;
 int IN6 = 27;
 int velocidadeC = 4;
+
 //motor_D
 int IN7 = 28;
 int IN8 = 29;
