@@ -120,7 +120,7 @@ void loop() {
         // Printa o mapa no monitor serial
         printMap();
 
-        // Verifica para onde o robô deve ir (sequência padrão: F -> E -> D -> S
+        // Verifica para onde o robô deve ir (sequência padrão: F -> E -> D -> S)
         if (sonic.F < threshDist) {
 
             if (sonic.E < threshDist) {
