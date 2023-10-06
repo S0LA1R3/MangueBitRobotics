@@ -57,7 +57,7 @@ struct Sonic {
     int F, E, D;
 };
 
-// Verificar proximidade de paredes inicialmente
+// Inicializa sonic
 Sonic sonic(readDistFrente, readDistEsquerda, readDistDireita);
 
 // Usado para indicar que o encoder detectou a chegada em um novo tile
