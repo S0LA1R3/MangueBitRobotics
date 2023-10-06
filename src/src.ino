@@ -1,107 +1,187 @@
-//Motores esquerdos
+#include "ultrassom.h"
 
-#define ENL1 1
-#define O1L1 2
-#define O2L1 3
+//motor_A
+int IN1 = 22 ;
+int IN2 = 23 ;
+int velocidadeA = 2;
 
-#define ENL2 4
-#define O1L2 5
-#define O2L2 6
+//motor_B
+int IN3 = 24 ;
+int IN4 = 25 ;
+int velocidadeB = 3;
 
-//Motores direitos
+//motor_C
+int IN5 = 26;
+int IN6 = 27;
+int velocidadeC = 4;
 
-#define ENR1 7
-#define O1R1 8
-#define O2R1 9
+//motor_D
+int IN7 = 28;
+int IN8 = 29;
+int velocidadeD = 5;
 
-#define ENR2 10
-#define O1R2 11
-#define O2R2 12
+int speed = 255;
 
-int speed = 100;
+int threshDist = 10;
 
+//Inicializa Pinos
 void setup() {
   Serial.begin(9600);
 
-  pinMode(ENL1, OUTPUT);
-  pinMode(O1L1, OUTPUT);
-  pinMode(O2L1, OUTPUT);
+  pinMode(velocidadeA, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
 
-  pinMode(ENL2, OUTPUT);
-  pinMode(O1L2, OUTPUT);
-  pinMode(O2L2, OUTPUT);
+  pinMode(velocidadeB, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
 
-  pinMode(ENR1, OUTPUT);
-  pinMode(O1R1, OUTPUT);
-  pinMode(O2R1, OUTPUT);
+  pinMode(velocidadeC, OUTPUT);
+  pinMode(IN5, OUTPUT);
+  pinMode(IN6, OUTPUT);
 
-  pinMode(ENR2, OUTPUT);
-  pinMode(O1R2, OUTPUT);
-  pinMode(O2R2, OUTPUT);
+  pinMode(velocidadeD, OUTPUT);
+  pinMode(IN7, OUTPUT);
+  pinMode(IN8, OUTPUT);
 
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-  goFoward(speed);
-}
+void loop(){
+  int distEsquerda = readDistEsquerda();
+  int distDireita = readDistDireita();
+  int distFrente = readDistFrente();
 
-void goForward(int speed) {
-  LMotorSpeed(speed);
-  RMotorSpeed(speed);
-}
+  if(distFrente < threshDist){
 
-void turnLeft(int speed) {
-  speed = abs(speed);
-  LMotorSpeed(speed);
-  RMotorSpeed(-speed);
-}
+    if(distEsquerda < threshDist){
 
-void turnRight(int speed) {
-  speed = abs(speed);
-  LMotorSpeed(-speed);
-  RMotorSpeed(speed);
-}
+      if(distDireita < threshDist){
+        direita();
+        direita();
 
-void stop(){
-  LMotorSpeed(0);
-  RMotorSpeed(0);
-}
+      }else{
+        direita();
+        Serial.print("direita: ");
+        Serial.println(distDireita);
+      }
 
-
-void LMotorSpeed(int speed) {
-  if (speed > 100)
-    speed = 100;
-  if (speed < -100)
-    speed = -100;
-
-  analogWrite(ENL1, int(abs(speed)*2.55));
-
-  if(speed > 0){
-    digitalWrite(01L1, HIGH);
-    digitalWrite(02L1, LOW);
-    
+    }else{
+        esquerda();
+        Serial.print("esquerda: ");
+        Serial.println(distEsquerda);
+    }
   }else{
-    digitalWrite(01L1, LOW);
-    digitalWrite(02L1, HIGH);
+    frente();
+    Serial.print("frente: ");
+    Serial.println(distFrente);
   }
+  delay(2000);
 }
 
-void RMotorSpeed(int speed) {
-  if (speed > 100)
-    speed = 100;
-    
-  if (speed < -100)
-    speed = -100;
+void frente(){
 
-  analogWrite(ENR1, int(abs(speed)*2.55));
+  digitalWrite(IN1, LOW); // EF
+  digitalWrite(IN2, HIGH);
+      
+  digitalWrite(IN3, LOW); // ET
+  digitalWrite(IN4, HIGH);
 
-  if(speed > 0){
-    digitalWrite(01R1, HIGH);
-    digitalWrite(02R1, LOW);
+  digitalWrite(IN5, HIGH); // DF
+  digitalWrite(IN6, LOW);
+
+  digitalWrite(IN7, HIGH); // DT
+  digitalWrite(IN8, LOW);
+      
+  analogWrite(velocidadeA, int(abs(speed)));
+  analogWrite(velocidadeB, int(abs(speed)));
+  analogWrite(velocidadeC, int(abs(speed)));
+  analogWrite(velocidadeD, int(abs(speed)));
+}
+
+void direita(){
+
+  digitalWrite(IN1, LOW); // EF
+  digitalWrite(IN2, HIGH);
+      
+  digitalWrite(IN3, LOW); // ET
+  digitalWrite(IN4, HIGH);
+
+  digitalWrite(IN5, LOW); // DF
+  digitalWrite(IN6, LOW);
+
+  digitalWrite(IN7, LOW); // DT
+  digitalWrite(IN8, LOW);
+      
+  analogWrite(velocidadeA, int(abs(speed)));
+  analogWrite(velocidadeB, int(abs(speed)));
+  analogWrite(velocidadeC, int(abs(speed)));
+  analogWrite(velocidadeD, int(abs(speed)));
+}
+
+void esquerda(){
+
+  digitalWrite(IN1, LOW); // EF
+  digitalWrite(IN2, LOW);
+      
+  digitalWrite(IN3, LOW); // ET
+  digitalWrite(IN4, LOW);
+
+  digitalWrite(IN5, HIGH); // DF
+  digitalWrite(IN6, LOW);
+
+  digitalWrite(IN7, HIGH); // DT
+  digitalWrite(IN8, LOW);
+      
+  analogWrite(velocidadeA, int(abs(speed)));
+  analogWrite(velocidadeB, int(abs(speed)));
+  analogWrite(velocidadeC, int(abs(speed)));
+  analogWrite(velocidadeD, int(abs(speed)));
+}
+
+void parar(){
+  digitalWrite(IN1,LOW);
+  digitalWrite(IN2,LOW);
+  digitalWrite(IN3,LOW);
+  digitalWrite(IN4,LOW);
+  digitalWrite(IN5,LOW);
+  digitalWrite(IN6,LOW);
+  digitalWrite(IN7,LOW);
+  digitalWrite(IN8,LOW);
+}
+
+int readDistFrente(){
+  // Cria variavel do tipo int
+  int distancia = 0;
     
-  }else{
-    digitalWrite(01R1, LOW);
-    digitalWrite(02R1, HIGH);
-  }
+  // Variável recebe o valor da função da biblioteca
+  distancia = distanceSensorF.measureDistanceCm();
+    
+  // Exibe na porta serial o valor de distancia medido
+    
+  return distancia;
+}
+
+int readDistDireita(){
+
+  // Cria variavel do tipo int
+  int distancia = 0;
+    
+  // Variável recebe o valor da função da biblioteca
+  distancia = distanceSensorD.measureDistanceCm();
+    
+  // Exibe na porta serial o valor de distancia medido
+    
+  return distancia;
+}
+
+int readDistEsquerda(){
+  // Cria variavel do tipo int
+  int distancia = 0;
+    
+  // Variável recebe o valor da função da biblioteca
+  distancia = distanceSensorE.measureDistanceCm();
+    
+  // Exibe na porta serial o valor de distancia medido
+
+  return distancia;
 }
