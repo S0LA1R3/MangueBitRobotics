@@ -1,4 +1,4 @@
-#include "ultrassom.h"
+//#include "ultrassom.h"
 #include "graphElement.hpp"
 
 // motor_A
@@ -320,9 +320,9 @@ void updateTile() {
 }
 
 void printMap() {
-    for (GraphElement linha[] : mapa) {
+    for (GraphElement linha[tamanhoMaximo] : mapa) {
         for (GraphElement elemento : linha) {
-            Serial.print(element.getValue());
+            Serial.print(elemento.getValue());
             Serial.print(" ");
         }
         Serial.println();
