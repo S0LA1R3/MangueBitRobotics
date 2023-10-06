@@ -24,6 +24,13 @@ int speed = 255;
 
 int threshDist = 10;
 
+enum Direction{
+	N,
+	D,
+	S,
+	E
+}
+
 //Inicializa Pinos
 void setup() {
   Serial.begin(9600);
@@ -47,6 +54,7 @@ void setup() {
 }
 
 void loop(){
+  Direction direction = N;
   int distEsquerda = readDistEsquerda();
   int distDireita = readDistDireita();
   int distFrente = readDistFrente();
@@ -99,6 +107,7 @@ void frente(){
 }
 
 void direita(){
+	direction++;
 
   digitalWrite(IN1, LOW); // EF
   digitalWrite(IN2, HIGH);
@@ -119,6 +128,7 @@ void direita(){
 }
 
 void esquerda(){
+	direction--;
 
   digitalWrite(IN1, LOW); // EF
   digitalWrite(IN2, LOW);

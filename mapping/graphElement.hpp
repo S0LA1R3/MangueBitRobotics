@@ -1,10 +1,6 @@
 #ifndef GRAPHELEMENT_HPP
 #define GRAPHELEMENT_HPP
 
-#include <vector>
-
-using namespace std;
-
 class GraphElement {
 public:
     enum ElementType{
@@ -12,12 +8,12 @@ public:
         VICTIM,
         HOLE,
         LEVELCHANGE,
-        DEFAULT
+        PADRAO
     };
 
-    GraphElement() : value(0), type(DEFAULT) {}
+    GraphElement() : value(0), type(PADRAO) {}
 
-    GraphElement(int val) : value(val), type(DEFAULT) {};
+    GraphElement(int val) : value(val), type(PADRAO) {};
 
     GraphElement(ElementType ty) : value(0), type(ty) {};
 
@@ -36,7 +32,7 @@ public:
     }
 
 private:
-    vector<GraphElement> adjacent;
+    GraphElement* adjacent[4];
     int value;
     ElementType type;
 };
