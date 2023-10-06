@@ -1,11 +1,11 @@
-//#include "ultrassom.h"
+#include "ultrassom.h"
 #include "graphElement.hpp"
 
 int readDistFrente() {
     int distancia = 0;
 
     // Variável recebe o valor da função da biblioteca
-    //distancia = distanceSensorF.measureDistanceCm();
+    distancia = distanceSensorF.measureDistanceCm();
 
     return distancia;
 }
@@ -14,7 +14,7 @@ int readDistDireita() {
     int distancia = 0;
 
     // Variável recebe o valor da função da biblioteca
-    //distancia = distanceSensorD.measureDistanceCm();
+    distancia = distanceSensorD.measureDistanceCm();
 
     return distancia;
 }
@@ -23,19 +23,19 @@ int readDistEsquerda() {
     int distancia = 0;
 
     // Variável recebe o valor da função da biblioteca
-    //distancia = distanceSensorE.measureDistanceCm();
+    distancia = distanceSensorE.measureDistanceCm();
 
     return distancia;
 }
 
 // motor_A
-int IN1 = 22 ;
-int IN2 = 23 ;
+int IN1 = 22;
+int IN2 = 23;
 int velocidadeA = 2;
 
 // motor_B
-int IN3 = 24 ;
-int IN4 = 25 ;
+int IN3 = 24;
+int IN4 = 25;
 int velocidadeB = 3;
 
 // motor_C
@@ -54,7 +54,7 @@ int speed = 255;
 int threshDist = 10;
 
 // Direções absolutas do robô
-enum Direction{
+enum Direction {
     N,
     D,
     S,
@@ -89,98 +89,6 @@ Sonic sonic = {readDistFrente(), readDistEsquerda(), readDistDireita()};
 
 // Usado para indicar que o encoder detectou a chegada em um novo tile
 bool tile = false;
-
-void setup() {
-    // Inicializa monitor serial
-    Serial.begin(9600);
-
-    // Inicializa Pinos
-    pinMode(velocidadeA, OUTPUT);
-    pinMode(IN1, OUTPUT);
-    pinMode(IN2, OUTPUT);
-
-    pinMode(velocidadeB, OUTPUT);
-    pinMode(IN3, OUTPUT);
-    pinMode(IN4, OUTPUT);
-
-    pinMode(velocidadeC, OUTPUT);
-    pinMode(IN5, OUTPUT);
-    pinMode(IN6, OUTPUT);
-
-    pinMode(velocidadeD, OUTPUT);
-    pinMode(IN7, OUTPUT);
-    pinMode(IN8, OUTPUT);
-
-    // robô inicia indo para frente
-    frente();
-
-    // Inicializa GraphElements do mapa
-    for (int i = 0; i < tamanhoMaximo; i++) {
-        for (int j = 0; j < tamanhoMaximo; j++) {
-            mapa[tamanhoMaximo][tamanhoMaximo] = GraphElement();
-        }
-    }
-    tamanhoMapa++;
-
-    // coloca paredes e caminhos adjacentes ao tile inicial no mapa
-    if (sonic.F < threshDist) {
-        mapa[actualTile.y - 1][actualTile.x].setValue(1);
-    }
-
-    if (sonic.E < threshDist) {
-        mapa[actualTile.y][actualTile.x - 1].setValue(1);
-    }
-
-    if (sonic.D < threshDist) {
-        mapa[actualTile.y][actualTile.x + 1].setValue(1);
-    }
-}
-
-void loop() {
-    // encoder medindo os giros até chegar no próximo tile, quando chega bota a variável tile em true
-
-    // Verifica se o robô já chegou no próximo tile
-    if (tile) {
-      if(true){
-        mapa[actualTile.y][actualTile.x + 1].setType(GraphElement::VICTIM);
-      }
-        // Atualiza tiles adjacentes
-        updateTile();
-
-        // Printa o mapa no monitor serial
-        printMap();
-
-        // Verifica para onde o robô deve ir (sequência padrão: F -> E -> D -> S)
-        if (sonic.F < threshDist) {
-
-            if (sonic.E < threshDist) {
-
-                if (sonic.D < threshDist) {
-                    direita();
-                    direita();
-                    Serial.print("fazendo a volta");
-
-                } else {
-                    direita();
-                    Serial.print("direita: ");
-                    Serial.println(sonic.D);
-                }
-
-            } else {
-                esquerda();
-                Serial.print("esquerda: ");
-                Serial.println(sonic.E);
-            }
-        } else {
-            frente();
-            Serial.print("frente: ");
-            Serial.println(sonic.F);
-        }
-        if(static_cast<int>(direction) == 4){
-          direction = N;
-        }
-    }
-}
 
 void frente() {
     digitalWrite(IN1, LOW); // EF
@@ -326,5 +234,101 @@ void printMap() {
             Serial.print(" ");
         }
         Serial.println();
+    }
+}
+
+void setup() {
+    // Inicializa monitor serial
+    Serial.begin(9600);
+
+    // Inicializa Pinos
+    pinMode(velocidadeA, OUTPUT);
+    pinMode(IN1, OUTPUT);
+    pinMode(IN2, OUTPUT);
+
+    pinMode(velocidadeB, OUTPUT);
+    pinMode(IN3, OUTPUT);
+    pinMode(IN4, OUTPUT);
+
+    pinMode(velocidadeC, OUTPUT);
+    pinMode(IN5, OUTPUT);
+    pinMode(IN6, OUTPUT);
+
+    pinMode(velocidadeD, OUTPUT);
+    pinMode(IN7, OUTPUT);
+    pinMode(IN8, OUTPUT);
+
+    // robô inicia indo para frente
+    frente();
+
+    // Inicializa GraphElements do mapa
+    for (int i = 0; i < tamanhoMaximo; i++) {
+        for (int j = 0; j < tamanhoMaximo; j++) {
+            mapa[i][j] = GraphElement();
+        }
+    }
+    tamanhoMapa++;
+
+    // coloca paredes e caminhos adjacentes ao tile inicial no mapa
+    if (sonic.F < threshDist) {
+        mapa[actualTile.y - 1][actualTile.x].setValue(1);
+    }
+
+    if (sonic.E < threshDist) {
+        mapa[actualTile.y][actualTile.x - 1].setValue(1);
+    }
+
+    if (sonic.D < threshDist) {
+        mapa[actualTile.y][actualTile.x + 1].setValue(1);
+    }
+}
+
+void loop() {
+    // encoder medindo os giros até chegar no próximo tile, quando chega bota a variável tile em true
+
+    // Verifica se o robô já chegou no próximo tile
+    if (tile) {
+        if (true) {
+            if (direction == N) {
+                mapa[actualTile.y][actualTile.x + 1].setType(GraphElement::VICTIM);
+            } else if (direction == S) {
+                mapa[actualTile.y][actualTile.x - 1].setType(GraphElement::VICTIM);
+            } else if (direction == D) {
+                mapa[actualTile.y + 1][actualTile.x].setType(GraphElement::VICTIM);
+            } else {
+                mapa[actualTile.y - 1][actualTile.x].setType(GraphElement::VICTIM);
+            }
+            // Atualiza tiles adjacentes
+            updateTile();
+
+            // Printa o mapa no monitor serial
+            printMap();
+
+            // Verifica para onde o robô deve ir (sequência padrão: F -> E -> D -> S)
+            if (sonic.F < threshDist) {
+                if (sonic.E < threshDist) {
+                    if (sonic.D < threshDist) {
+                        direita();
+                        direita();
+                        Serial.print("fazendo a volta");
+                    } else {
+                        direita();
+                        Serial.print("direita: ");
+                        Serial.println(sonic.D);
+                    }
+                } else {
+                    esquerda();
+                    Serial.print("esquerda: ");
+                    Serial.println(sonic.E);
+                }
+            } else {
+                frente();
+                Serial.print("frente: ");
+                Serial.println(sonic.F);
+            }
+            if (static_cast<int>(direction) == 4) {
+                direction = N;
+            }
+        }
     }
 }
