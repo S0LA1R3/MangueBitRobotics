@@ -284,19 +284,24 @@ void setup() {
 }
 
 void loop() {
+    char c = 6;
     // encoder medindo os giros até chegar no próximo tile, quando chega bota a variável tile em true
 
     // Verifica se o robô já chegou no próximo tile
     if (tile) {
+        if (Serial.available()) {
+            c = Serial.read();
         if (true) {
-            if (direction == N) {
-                mapa[actualTile.y][actualTile.x + 1].setType(GraphElement::VICTIM);
-            } else if (direction == S) {
-                mapa[actualTile.y][actualTile.x - 1].setType(GraphElement::VICTIM);
-            } else if (direction == D) {
-                mapa[actualTile.y + 1][actualTile.x].setType(GraphElement::VICTIM);
-            } else {
-                mapa[actualTile.y - 1][actualTile.x].setType(GraphElement::VICTIM);
+            if(c != 6){
+              if (direction == N) {
+                  mapa[actualTile.y][actualTile.x + 1].setType(GraphElement::VICTIM);
+              } else if (direction == S) {
+                  mapa[actualTile.y][actualTile.x - 1].setType(GraphElement::VICTIM);
+              } else if (direction == D) {
+                  mapa[actualTile.y + 1][actualTile.x].setType(GraphElement::VICTIM);
+              } else {
+                  mapa[actualTile.y - 1][actualTile.x].setType(GraphElement::VICTIM);
+              }
             }
             // Atualiza tiles adjacentes
             updateTile();
