@@ -23,8 +23,10 @@ int velocidadeD = 5;
 
 int speed = 255;
 
+// Distância minima robô-parede
 int threshDist = 10;
 
+// Direções absolutas do robô
 enum Direction{
 	N,
 	D,
@@ -32,28 +34,40 @@ enum Direction{
 	E
 }
 
+// Direção absoluta padrão
 Direction direction = N;
 
+// Inicializa o mapa com tamanhoMaximo linhas e colunas
 const int tamanhoMaximo = 10; // Tamanho máximo da lista
 GraphElement mapa[tamanhoMaximo][tamanhoMaximo];
+
+// Variavel usada para inicializar os GraphElements do mapa
 int tamanhoMapa = 0;
 
+// Estrutura coordenada
 struct Point {
     int y, x;
 };
 
+// Tile inicial (meio do mapa)
 Point actualTile = {tamanhoMaximo / 2 - 1, tamanhoMaximo / 2 - 1};
 
- int distEsquerda = readDistEsquerda();
- int distDireita = readDistDireita();
- int distFrente = readDistFrente();
+// Estrutura com as proximidades das paredes
+struct Sonic{
+  int F, E, D;
+}
 
+// Verificar proximidade de paredes inicialmente
+Sonic sonic(readDistFrente, readDistEsquerda, readDistDireita);
+
+// Usado para indicar que o encoder detectou a chegada em um novo tile
  bool tile = false;
 
-//Inicializa Pinos
 void setup() {
+  // Inicializa monitor serial
   Serial.begin(9600);
 
+  // Inicializa Pinos
   pinMode(velocidadeA, OUTPUT);
   pinMode(IN1, OUTPUT);
   pinMode(IN2, OUTPUT);
@@ -70,24 +84,10 @@ void setup() {
   pinMode(IN7, OUTPUT);
   pinMode(IN8, OUTPUT);
 
-  digitalWrite(IN1, LOW); // EF
-  digitalWrite(IN2, HIGH);
-      
-  digitalWrite(IN3, LOW); // ET
-  digitalWrite(IN4, HIGH);
+  // robô ínicia indo para frente
+  frente();
 
-  digitalWrite(IN5, HIGH); // DF
-  digitalWrite(IN6, LOW);
-
-  digitalWrite(IN7, HIGH); // DT
-  digitalWrite(IN8, LOW);
-      
-  analogWrite(velocidadeA, int(abs(speed)));
-  analogWrite(velocidadeB, int(abs(speed)));
-  analogWrite(velocidadeC, int(abs(speed)));
-  analogWrite(velocidadeD, int(abs(speed)));
-
-    // Adicione objetos às listas usando o construtor com argumento
+    // Inicializa GraphElements do mapa
     for (int i = 0; i < tamanhoMaximo; i++) {
         for (int j = 0; j < tamanhoMaximo; j++) {
             mapa[tamanhoMaximo][tamanhoMaximo] = GraphElement();
@@ -95,47 +95,55 @@ void setup() {
     }
     tamanhoMapa++;
 
-    if (distFrente < threshDist) {
+    // coloca paredes e caminhos adjacentes ao tile inicial no mapa
+    if (sonic.F < threshDist) {
         mapa[actualTile.y - 1][actualTile.x].setValue(1);
     }
 
-    if (distEsquerda < threshDist) {
+    if (sonic.E < threshDist) {
         mapa[actualTile.y][actualTile.x - 1].setValue(1);
     }
 
-    if (distDireita < threshDist) {
+    if (sonic.D < threshDist) {
         mapa[actualTile.y][actualTile.x + 1].setValue(1);
     }
 }
 
 void loop(){
   // encoder medindo os giros até chegar no proximo tile, quando chega bota a variavel tile em true
+
+  // Verifica se o robô já chegou no próximo tile
   if(tile){
+    // Atualiza tiles adjacentes
     updateTile();
+
+    // Printa o mapa no monitor serial
     printMap();
-    if(distFrente < threshDist){
+
+    // Verifica para onde o robô deve ir (sequencia padrao: F -> E -> D -> S
+    if(sonic.F < threshDist){
   
-      if(distEsquerda < threshDist){
+      if(sonic.E < threshDist){
   
-        if(distDireita < threshDist){
+        if(sonic.D < threshDist){
           direita();
           direita();
   
         }else{
           direita();
           Serial.print("direita: ");
-          Serial.println(distDireita);
+          Serial.println(sonic.D);
         }
   
       }else{
           esquerda();
           Serial.print("esquerda: ");
-          Serial.println(distEsquerda);
+          Serial.println(sonic.E);
       }
     }else{
       frente();
       Serial.print("frente: ");
-      Serial.println(distFrente);
+      Serial.println(sonic.F);
     }
   }
 }
@@ -161,6 +169,7 @@ void frente(){
 }
 
 void direita(){
+  // Muda direção absoluta
 	direction++;
 
   digitalWrite(IN1, LOW); // EF
@@ -182,6 +191,7 @@ void direita(){
 }
 
 void esquerda(){
+  // Muda direção absoluta
 	direction--;
 
   digitalWrite(IN1, LOW); // EF
@@ -214,38 +224,28 @@ void parar(){
 }
 
 int readDistFrente(){
-  // Cria variavel do tipo int
   int distancia = 0;
     
   // Variável recebe o valor da função da biblioteca
   distancia = distanceSensorF.measureDistanceCm();
     
-  // Exibe na porta serial o valor de distancia medido
-    
   return distancia;
 }
 
 int readDistDireita(){
-
-  // Cria variavel do tipo int
   int distancia = 0;
     
   // Variável recebe o valor da função da biblioteca
   distancia = distanceSensorD.measureDistanceCm();
     
-  // Exibe na porta serial o valor de distancia medido
-    
   return distancia;
 }
 
 int readDistEsquerda(){
-  // Cria variavel do tipo int
   int distancia = 0;
     
   // Variável recebe o valor da função da biblioteca
   distancia = distanceSensorE.measureDistanceCm();
-    
-  // Exibe na porta serial o valor de distancia medido
 
   return distancia;
 }
@@ -254,60 +254,60 @@ void updateTile(){
   if(direction == N){
     actualTile.y--;
 
-    if (distFrente < threshDist) {
+    if (sonic.F < threshDist) {
         mapa[actualTile.y - 1][actualTile.x].setValue(1);
     }
 
-    if (distEsquerda < threshDist) {
+    if (sonic.E < threshDist) {
         mapa[actualTile.y][actualTile.x - 1].setValue(1);
     }
 
-    if (distDireita < threshDist) {
+    if (sonic.D < threshDist) {
         mapa[actualTile.y][actualTile.x + 1].setValue(1);
     }
     
   }else if(direction == S){
     actualTile.y++;
 
-    if (distFrente < threshDist) {
+    if (sonic.F < threshDist) {
         mapa[actualTile.y + 1][actualTile.x].setValue(1);
     }
 
-    if (distEsquerda < threshDist) {
+    if (sonic.E < threshDist) {
         mapa[actualTile.y][actualTile.x + 1].setValue(1);
     }
 
-    if (distDireita < threshDist) {
+    if (sonic.D < threshDist) {
         mapa[actualTile.y][actualTile.x - 1].setValue(1);
     }
     
   }else if(direction == D){
     actualTile.x++;
 
-    if (distFrente < threshDist) {
+    if (sonic.F < threshDist) {
         mapa[actualTile.y][actualTile.x + 1].setValue(1);
     }
 
-    if (distEsquerda < threshDist) {
+    if (sonic.E < threshDist) {
         mapa[actualTile.y - 1][actualTile.x].setValue(1);
     }
 
-    if (distDireita < threshDist) {
+    if (sonic.D < threshDist) {
         mapa[actualTile.y + 1][actualTile.x].setValue(1);
     }
     
   }else{
     actualTile.x--;
 
-    if (distFrente < threshDist) {
+    if (sonic.F < threshDist) {
         mapa[actualTile.y][actualTile.x - 1].setValue(1);
     }
 
-    if (distEsquerda < threshDist) {
+    if (sonic.E < threshDist) {
         mapa[actualTile.y + 1][actualTile.x].setValue(1);
     }
 
-    if (distDireita < threshDist) {
+    if (sonic.D < threshDist) {
         mapa[actualTile.y - 1][actualTile.x + 1].setValue(1);
     }
   }
