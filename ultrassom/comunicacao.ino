@@ -1,4 +1,3 @@
-
 #include <HCSR04.h>
 
 //Define os pinos do Arduino D8 e D9 como porta do ECHO e TRIGGER  
