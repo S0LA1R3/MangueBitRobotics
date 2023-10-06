@@ -70,30 +70,37 @@ void stop(){
 
 
 void LMotorSpeed(int speed) {
-  if (speed > 100) speed = 100;
-  if (speed < -100) speed = -100;
+  if (speed > 100)
+    speed = 100;
+  if (speed < -100)
+    speed = -100;
 
   analogWrite(ENL1, int(abs(speed)*2.55));
 
-  if (speed > 0) {
+  if(speed > 0){
     digitalWrite(01L1, HIGH);
     digitalWrite(02L1, LOW);
-  } else {
+    
+  }else{
     digitalWrite(01L1, LOW);
     digitalWrite(02L1, HIGH);
   }
 }
 
 void RMotorSpeed(int speed) {
-  if (speed > 100) speed = 100;
-  if (speed < -100) speed = -100;
+  if (speed > 100)
+    speed = 100;
+    
+  if (speed < -100)
+    speed = -100;
 
   analogWrite(ENR1, int(abs(speed)*2.55));
 
-  if (speed > 0) {
+  if(speed > 0){
     digitalWrite(01R1, HIGH);
     digitalWrite(02R1, LOW);
-  } else {
+    
+  }else{
     digitalWrite(01R1, LOW);
     digitalWrite(02R1, HIGH);
   }
