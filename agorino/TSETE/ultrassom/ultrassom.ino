@@ -43,3 +43,16 @@ int readDistEsquerda() {
 
   return distancia;
 }
+
+void setup(){
+  Serial.begin(9600);
+}
+
+void loop(){
+  Serial.print("Frente: ");
+  Serial.println(readDistFrente());
+  Serial.print("Direita: ");
+  Serial.println(readDistDireita());
+  Serial.print("Esquerda: ");
+  Serial.println(readDistEsquerda());
+}
