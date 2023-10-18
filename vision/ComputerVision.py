@@ -14,10 +14,12 @@ def detect_color(frame, lower_bound, upper_bound, color_name):
     max_contour = max(contours, key=cv2.contourArea, default=None)
     
     if max_contour is not None:
-        ser.write(color_name.encode())
-        x, y, w, h = cv2.boundingRect(max_contour)
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        cv2.putText(frame, color_name, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+    	if color_name == "Vermelho":
+    		ser.write("3".encode())
+    	elif color_name == "Verde":
+    		ser.write("4".encode())
+    	elif color_name == "Amarelo":
+    		ser.write("5".encode())
 
 
 ser = serial.Serial('/dev/ttyACM1', 9600)
@@ -35,16 +37,13 @@ while True:
 
     resultado = ''
     if 'h' in text.lower():
-        # cv2.putText(frame, 'h', (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 0, 0), 2)
-        resultado += 'h '
+        resultado += '0'
     
     if 's' in text.lower():
-        # cv2.putText(frame, 's', (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
-        resultado += 's '
+        resultado += '1'
 
     if 'u' in text.lower():
-        # cv2.putText(frame, 'u', (0, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
-        resultado += 'u '
+        resultado += '2'
 
     if resultado != '':
         ser.write(resultado.encode())
@@ -60,10 +59,5 @@ while True:
     upper_yellow = np.array([40, 255, 255])
     detect_color(frame, lower_yellow, upper_yellow, "Amarelo")
 
-    cv2.imshow('Camera', frame)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-
 cap.release()
-cv2.destroyAllWindows()
 ser.close()
